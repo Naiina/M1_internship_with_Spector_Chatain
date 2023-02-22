@@ -8,11 +8,12 @@ Created on Sun Jan  8 13:52:18 2023
 import random
 import func_three_lines as func
 import os
+import csv
 
 from PIL import Image, ImageDraw, ImageFont
 l_colors = ["blue","red","green"]
 l_shapes = ["square","circle","triangle"]
-#random.seed(2023)
+random.seed(2023)
 
 
 l_size = 300
@@ -23,7 +24,7 @@ l_size = 300
 l_cond = [["faux_1","faux_2","existentiel","unicite","universel"],["faux_1","faux_2","one","two","mixte"]]
 l_set = ["set1","set2"]
 
-def generer_images_and_sentences_set1_lines(nb_set,l_shapes,l_colors,l_size,nb,file,condition):
+def generer_images_and_sentences_set1_lines(nb_set, l_shapes, l_colors, l_size, nb, csv_writer, condition):
     """
     
 
@@ -73,20 +74,26 @@ def generer_images_and_sentences_set1_lines(nb_set,l_shapes,l_colors,l_size,nb,f
         img.save(nb_set+"/"+condition+str(j)+"_"+nb_set+"test.png")
         item+=1
 
-        with open(file, 'a', encoding='UTF8') as f:
-            print(f"{item},{text},{condition+str(j)}_{nb_set}.png,{nb_set}_{condition+str(j)}", file=f)
+        csv_writer.writerow({
+            "item"    : item,
+            "text"    : text,
+            "picture" : "{}_{}.png".format(condition + str(j), nb_set),
+            "type"    : "{}_{}".format(nb_set, condition + str(j))
+        })
 
 file = "data.csv"
+fields_csv = ["item", "text", "picture", "type"]
 
+    
+    
+with open(file, 'w', encoding = 'UTF8') as f:
+    csv_writer = csv.DictWriter(f, fieldnames = fields_csv)
+    csv_writer.writeheader()
 
-with open(file, 'a', encoding='UTF8') as f:
-    print("item,text,picture,type", file=f)
-    
-    
-item = 0
-for i in [0,1]:
-    nb_set=l_set[i]
-    conditions = l_cond[i]
-    
-    for cond in conditions:
-        generer_images_and_sentences_set1_lines(nb_set,l_shapes,l_colors,l_size,3,file,cond)
+    item = 0
+    for i in [0, 1]:
+        nb_set=l_set[i]
+        conditions = l_cond[i]
+        
+        for cond in conditions:
+            generer_images_and_sentences_set1_lines(nb_set,l_shapes,l_colors,l_size,3, csv_writer,cond)
