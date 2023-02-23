@@ -67,17 +67,19 @@ def generer_images_and_sentences_set1_lines(nb_set, l_shapes, l_colors, l_size, 
         
         if nb_set == "set1":
             s,c = func.set1(condition,l_shapes,l_colors,l_size,img)
-            text = "In every row either there isn't a "+s+" or it is "+c
+            text = "In every row, either there isn't a  {} or it is {}.".format(s, c)
         if nb_set == "set2":
             s1,s2,s3,c = func.set2(condition,l_shapes,l_colors,l_size,img)
-            text = "In every row either there isn't a "+s1+" or the "+s2+" is "+c
-        img.save(nb_set+"/"+condition+str(j)+"_"+nb_set+"test.png")
+            text = "In every row, either there isn't a {} or the {} is {}.".format(s1, s2, c)
+
+        picture_name = "{}_{}test.png".format(condition + str(j), nb_set)
+        img.save(os.path.join(nb_set, picture_name))
         item+=1
 
         csv_writer.writerow({
             "item"    : item,
             "text"    : text,
-            "picture" : "{}_{}.png".format(condition + str(j), nb_set),
+            "picture" : picture_name,
             "type"    : "{}_{}".format(nb_set, condition + str(j))
         })
 
